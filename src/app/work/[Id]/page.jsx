@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Addbtn from "@/app/plan/addbtn";
+import Savebtn from "@/app/plan/savebtn";
 
 export const instant = false;
 
@@ -139,19 +141,9 @@ const WorkDetailsPage = async ({ params }) => {
 
           {/* Action Buttons */}
           <div className="mt-7 flex flex-wrap gap-3">
-            <button
-              type="button"
-              className="rounded-lg bg-[#b9ff00] px-5 py-3 text-xs font-bold text-black transition hover:bg-[#a5e600]"
-            >
-              Add to Today&apos;s Plan
-            </button>
+            <Addbtn works={works}></Addbtn>
 
-            <button
-              type="button"
-              className="rounded-lg border border-[#343740] px-5 py-3 text-xs font-medium text-white transition hover:bg-[#1b1e25]"
-            >
-              ♧ Save for Later
-            </button>
+           <Savebtn works={works}></Savebtn>
           </div>
         </div>
       </div>

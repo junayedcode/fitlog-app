@@ -2,9 +2,9 @@
 import React, { createContext, useState } from 'react';
 
 
-const PlanContext = createContext({})
+ export const PlanContext = createContext({})
 
-const PlanProvider = ({children }) => {
+const PlanProvider = ({children}) => {
        const [plans, setPlans] = useState([]);
        const [loaded, setLoaded] = useState([]);
 
