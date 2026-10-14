@@ -35,10 +35,12 @@ const Navber = () => {
   <div className="navbar-center hidden lg:flex">
     <ul className="menu menu-horizontal px-1">
       <li>
-
+ <Link href="/work">Workouts</Link>
       </li>
-      <Link href="/work">Workouts</Link>
-      <li><a></a></li>
+     
+      <li>
+        <Link href="/plan">My Plan</Link>
+      </li>
     </ul>
   </div>
   <div className="navbar-end">

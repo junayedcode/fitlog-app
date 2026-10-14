@@ -25,7 +25,7 @@ const HomePage = () => {
           </p>
 
           <Link
-            href="/workouts"
+            href="/work"
             className="btn btn-sm rounded-md border-0 bg-[#b9ff00] px-5 text-xs font-bold uppercase text-black hover:bg-[#a4e600]"
           >
             Browse Workouts
