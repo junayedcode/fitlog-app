@@ -8,8 +8,9 @@ export const instant = false;
 
 const getWorkouts = async () => {
   try {
-    const res = await fetch("http://localhost:3000/workouts.json");
-
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/workouts.json`
+      
+    );
     if (!res.ok) {
       throw new Error("Failed to fetch workouts");
     }
