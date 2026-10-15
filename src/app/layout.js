@@ -33,6 +33,7 @@ export default function RootLayout({ children }) {
 <Navber />
   <main className="flex-1">{children}</main>
   <Footer />
+      
     </PlanProvider>
     
   

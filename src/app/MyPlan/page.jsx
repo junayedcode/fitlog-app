@@ -104,18 +104,18 @@ const MyPlan = () => {
                   </button>
                 )}
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    isSaved
-                      ? null
-                      : removeWorkout(work.id)
-                  }
-                  aria-label="Remove workout"
-                  className="px-1 text-gray-500 hover:text-white"
-                >
-                  ×
-                </button>
+              {plans.map((works) => (
+  <button
+    key={works.id}
+    onClick={() =>
+      setPlans((previous) =>
+        previous.filter((item) => item.id !== works.id)
+      )
+    }
+  >
+    ×
+  </button>
+))}
               </div>
             </div>
           );
