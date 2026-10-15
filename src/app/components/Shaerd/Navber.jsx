@@ -22,7 +22,7 @@ const Navber = () => {
       <div className="navbar min-h-[70px] p-0">
         {/* Logo */}
         <div className="navbar-start">
-          <Link href="/work" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Image
               src={Logo}
               alt="FITLOG logo"
