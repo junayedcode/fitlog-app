@@ -1,7 +1,6 @@
 import React from "react";
 import Workoutscard from "@/app/components/Shaerd/Workoutscard";
 
-export const dynamic = "force-dynamic";
 
 const getWorkouts = async () => {
   try {
