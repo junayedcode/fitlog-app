@@ -1,76 +1,156 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { PlanContext } from "../context/PlanContext";
-import Workoutscard from "../components/Shaerd/Workoutscard";
 
 const MyPlan = () => {
-  const { plans, loaded } = useContext(PlanContext);
+  const { plans, setPlans, loaded } = useContext(PlanContext);
+  const [completed, setCompleted] = useState([]);
+
+  const markAsDone = (id) => {
+    setCompleted((previous) =>
+      previous.includes(id) ? previous : [...previous, id]
+    );
+  };
+
+  const removeWorkout = (id) => {
+    setPlans((previous) =>
+      previous.filter((work) => String(work.id) !== String(id))
+    );
+    setCompleted((previous) =>
+      previous.filter((workId) => String(workId) !== String(id))
+    );
+  };
+
+  const renderWorkouts = (workouts, isSaved = false) => {
+    if (!Array.isArray(workouts) || workouts.length === 0) {
+      return (
+        <div className="py-10 text-center">
+          <h2 className="text-xl font-bold text-white">
+            {isSaved ? "No Saved Workouts" : "No Workouts Added Yet"}
+          </h2>
+          <p className="mt-2 text-sm text-gray-400">
+            {isSaved
+              ? "Workouts you save for later will appear here."
+              : "Explore workouts and add them to your plan."}
+          </p>
+          <Link
+            href="/work"
+            className="mt-4 inline-block rounded-lg bg-[#b9ff00] px-5 py-3 text-sm font-bold text-black"
+          >
+            Explore Workouts
+          </Link>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-3">
+        {workouts.filter(Boolean).map((work) => {
+          const isCompleted = completed.includes(work.id);
+
+          return (
+            <div
+              key={work.id}
+              className="flex items-center gap-3 rounded-xl border border-[#252830] bg-[#15171c] p-3 text-white"
+            >
+              <Image
+                src={work.image}
+                alt={work.name || "Workout"}
+                width={100}
+                height={64}
+                unoptimized
+                className="h-[60px] w-[90px] shrink-0 rounded-lg object-cover sm:h-16 sm:w-[100px]"
+              />
+
+              <div className="min-w-0 flex-1">
+                <h2
+                  className={`truncate text-sm font-bold uppercase ${
+                    isCompleted ? "text-gray-500 line-through" : "text-white"
+                  }`}
+                >
+                  {work.name}
+                </h2>
+
+                <p className="mt-1 truncate text-xs text-gray-500">
+                  {work.equipment}
+                </p>
+
+                <div className="mt-2 flex flex-wrap gap-3 text-[10px] text-gray-400">
+                  <span>◷ {work.duration} min</span>
+                  <span>🔥 {work.caloriesBurned} kcal</span>
+                  <span>★ {work.rating}</span>
+                </div>
+              </div>
+
+              <div className="flex shrink-0 items-center gap-2">
+                <Link
+                  href={`/work/${work.id}`}
+                  className="rounded-full border border-[#30343d] px-3 py-1.5 text-[10px] text-gray-300 hover:border-white"
+                >
+                  View Details
+                </Link>
+
+                {!isSaved && (
+                  <button
+                    type="button"
+                    onClick={() => markAsDone(work.id)}
+                    disabled={isCompleted}
+                    className="rounded-full bg-[#b9ff00] px-3 py-1.5 text-[10px] font-bold text-black disabled:cursor-default disabled:opacity-60"
+                  >
+                    {isCompleted ? "✓ Completed" : "✓ Mark as Done"}
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    isSaved
+                      ? null
+                      : removeWorkout(work.id)
+                  }
+                  aria-label="Remove workout"
+                  className="px-1 text-gray-500 hover:text-white"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
-    <div className="px-[70px] py-[70px]">
+    <main className="min-h-screen bg-[#0b0c0f] px-5 py-8 md:px-[70px] md:py-[50px]">
       <div className="tabs tabs-border">
         <input
           type="radio"
           name="my_tabs_2"
           className="tab"
-          aria-label="Today's Plan"
+          aria-label={`Today's Plan ${plans?.length ?? 0}`}
           defaultChecked
         />
 
-        <div className="tab-content border-base-300 bg-base-100 p-10">
-          {plans.length > 0 ? (
-            plans.map((works) => (
-              <Workoutscard key={works.id} work={works} />
-            ))
-          ) : (
-            <div className="py-10 text-center">
-              <h2 className="text-xl font-bold text-white">
-                No Workouts Added Yet
-              </h2>
-
-              <p className="mt-2 text-sm text-gray-400">
-                You haven't added any workouts to your plan yet.
-                Explore workouts and add your favorites!
-              </p>
-
-              <Link
-                href="/work"
-                className="mt-4 inline-block rounded-lg bg-[#b9ff00] px-5 py-3 text-sm font-bold text-black"
-              >
-                Explore Workouts
-              </Link>
-            </div>
-          )}
+        <div className="tab-content border-base-300 p-4 sm:p-6">
+          {renderWorkouts(plans)}
         </div>
 
         <input
           type="radio"
           name="my_tabs_2"
           className="tab"
-          aria-label="Saved"
+          aria-label={`Saved ${loaded?.length ?? 0}`}
         />
 
-        <div className="tab-content border-base-300 bg-base-100 p-10">
-          {loaded.length > 0 ? (
-            loaded.map((works) => (
-              <Workoutscard key={works.id} work={works} />
-            ))
-          ) : (
-            <div className="py-10 text-center">
-              <h2 className="text-xl font-bold text-white">
-                No Saved Workouts
-              </h2>
-
-              <p className="mt-2 text-sm text-gray-400">
-                Workouts you save for later will appear here.
-              </p>
-            </div>
-          )}
+        <div className="tab-content border-base-300 p-4 sm:p-6">
+          {renderWorkouts(loaded, true)}
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
