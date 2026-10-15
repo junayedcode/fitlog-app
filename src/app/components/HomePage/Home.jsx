@@ -3,8 +3,10 @@ import Workoutscard from "@/app/components/Shaerd/Workoutscard";
 
 const getWorkouts = async () => {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/workouts.json` );
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || "";
+    const res = await fetch(`${baseUrl}/workouts.json`, {
+      cache: "no-store", 
+    });
 
     if (!res.ok) {
       throw new Error("Failed to fetch workouts");

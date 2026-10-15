@@ -1,25 +1,25 @@
-"use client"
-import React, { createContext, useState } from 'react';
+"use client";
 
+import React, { createContext, useState } from "react";
 
- export const PlanContext = createContext({})
+export const PlanContext = createContext(null);
 
-const PlanProvider = ({children}) => {
-       const [plans, setPlans] = useState([]);
-       const [loaded, setLoaded] = useState([]);
+const PlanProvider = ({ children }) => {
+  const [plans, setPlans] = useState([]);
+  const [loaded, setLoaded] = useState([]);
 
-       const sheardData ={
-        plans,
-        setPlans,
-        loaded, 
-        setLoaded
-       }
+  const sharedData = {
+    plans,
+    setPlans,
+    loaded,
+    setLoaded,
+  };
 
-    return <PlanContext.Provider value={sheardData}>
-        {children }
+  return (
+    <PlanContext.Provider value={sharedData}>
+      {children}
     </PlanContext.Provider>
-       
-    
+  );
 };
 
 export default PlanProvider;
