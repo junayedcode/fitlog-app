@@ -23,13 +23,11 @@ const getWorkouts = async () => {
 };
 
 const WorkDetailsPage = async ({ params }) => {
- 
-  const { id } = await params; 
+  const { id } = await params;
   const workoutsData = await getWorkouts();
 
-
   const works = workoutsData.find(
-    (item) => String(item.id).trim() === String(id).trim()
+    (item) => String(item.id).trim() === String(id).trim() || String(item._id).trim() === String(id).trim()
   );
 
   if (!works) {
@@ -38,7 +36,7 @@ const WorkDetailsPage = async ({ params }) => {
         <div>
           <h1 className="text-2xl font-bold">Workout Not Found</h1>
           <p className="mt-3 text-gray-400">
-            The workout you are looking for does not exist. (ID: {id})
+            The workout you are looking for does not exist.
           </p>
           <Link
             href="/work"
@@ -51,13 +49,8 @@ const WorkDetailsPage = async ({ params }) => {
     );
   }
 
-  const instructions = Array.isArray(works.instructions)
-    ? works.instructions
-    : [];
-
-  const muscleGroups = Array.isArray(works.muscleGroups)
-    ? works.muscleGroups
-    : [];
+  const instructions = Array.isArray(works.instructions) ? works.instructions : [];
+  const muscleGroups = Array.isArray(works.muscleGroups) ? works.muscleGroups : [];
 
   const details = [
     { label: "Equipment", value: Array.isArray(works.equipment) ? works.equipment.join(", ") : works.equipment },
@@ -72,8 +65,6 @@ const WorkDetailsPage = async ({ params }) => {
   return (
     <main className="min-h-screen bg-[#0b0c0f] px-5 py-10 text-white md:px-[70px] md:py-[70px]">
       <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-10">
-
-        {/* Workout Image */}
         <div className="overflow-hidden rounded-xl border border-[#252830] bg-[#15171c]">
           <Image
             src={works.image}
@@ -84,7 +75,6 @@ const WorkDetailsPage = async ({ params }) => {
           />
         </div>
 
-        {/* Workout Information */}
         <div className="min-w-0">
           <h1 className="text-2xl font-extrabold uppercase leading-tight tracking-wide sm:text-3xl">
             {works.name}
@@ -94,7 +84,6 @@ const WorkDetailsPage = async ({ params }) => {
             {works.description}
           </p>
 
-          {/* Muscle Groups */}
           <div className="mt-4 flex flex-wrap gap-2">
             {muscleGroups.map((muscle, index) => (
               <span
@@ -106,7 +95,6 @@ const WorkDetailsPage = async ({ params }) => {
             ))}
           </div>
 
-          {/* Details Card */}
           <div className="mt-6 overflow-hidden rounded-xl border border-[#252830] bg-[#15171c] px-4">
             {details.map((detail) => (
               <div
@@ -123,7 +111,6 @@ const WorkDetailsPage = async ({ params }) => {
             ))}
           </div>
 
-          {/* Instructions */}
           <section className="mt-7">
             <h2 className="text-sm font-bold uppercase tracking-wider">
               Instructions
@@ -142,7 +129,6 @@ const WorkDetailsPage = async ({ params }) => {
             )}
           </section>
 
-          {/* Action Buttons */}
           <div className="mt-7 flex flex-wrap gap-3">
             <Addbtn works={works} />
             <Savebtn works={works} />
