@@ -4,6 +4,7 @@ import "./globals.css";
 import Navber from "./components/Shaerd/Navber";
 import Footer from "./components/Shaerd/Footer";
 import PlanProvider from "./context/PlanContext";
+import { ToastContainer } from "react-toastify";
 
 
 const geistSans = Geist({
@@ -33,7 +34,7 @@ export default function RootLayout({ children }) {
 <Navber />
   <main className="flex-1">{children}</main>
   <Footer />
-      
+        <ToastContainer />
     </PlanProvider>
     
   
