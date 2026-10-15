@@ -4,6 +4,9 @@ import Image from "next/image";
 import Addbtn from "@/app/plan/addbtn";
 import Savebtn from "@/app/plan/savebtn";
 
+// Required for Next.js 16 blocking dynamic routes
+export const instant = false;
+
 const getWorkouts = async () => {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || "";
