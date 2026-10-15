@@ -1,18 +1,24 @@
 import React from "react";
 import Workoutscard from "@/app/components/Shaerd/Workoutscard";
+export const instant = false;
+import { connection } from "next/server";
 
 const getWorkouts = async () => {
+  await connection();
+
   try {
-   const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/workouts.json`, {
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/workouts.json`,
+      {
+        cache: "no-store",
+      }
+    );
 
     if (!res.ok) {
       throw new Error("Failed to fetch workouts");
     }
 
-    const data = await res.json();
-    return data;
+    return await res.json();
   } catch (error) {
     console.error("Error fetching workouts:", error);
     return [];
