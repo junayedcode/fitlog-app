@@ -4,13 +4,13 @@ import Image from "next/image";
 import Addbtn from "@/app/plan/addbtn";
 import Savebtn from "@/app/plan/savebtn";
 
-export const instant = false;
-
 const getWorkouts = async () => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/workouts.json`
-      
-    );
+    const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || "";
+    const res = await fetch(`${baseUrl}/workouts.json`, {
+      cache: "no-store",
+    });
+
     if (!res.ok) {
       throw new Error("Failed to fetch workouts");
     }
@@ -23,11 +23,13 @@ const getWorkouts = async () => {
 };
 
 const WorkDetailsPage = async ({ params }) => {
-  const { Id } = await params;
+ 
+  const { id } = await params; 
   const workoutsData = await getWorkouts();
 
+
   const works = workoutsData.find(
-    (item) => String(item.id) === String(Id)
+    (item) => String(item.id).trim() === String(id).trim()
   );
 
   if (!works) {
@@ -36,10 +38,10 @@ const WorkDetailsPage = async ({ params }) => {
         <div>
           <h1 className="text-2xl font-bold">Workout Not Found</h1>
           <p className="mt-3 text-gray-400">
-            The workout you are looking for does not exist.
+            The workout you are looking for does not exist. (ID: {id})
           </p>
           <Link
-            href="/Workouts"
+            href="/work"
             className="mt-6 inline-block rounded-lg bg-[#b9ff00] px-5 py-3 font-semibold text-black"
           >
             Back to Workouts
@@ -73,13 +75,13 @@ const WorkDetailsPage = async ({ params }) => {
 
         {/* Workout Image */}
         <div className="overflow-hidden rounded-xl border border-[#252830] bg-[#15171c]">
-         <Image
-  src={works.image}
-  alt={works.name}
-  width={600}
-  height={700}
-  className="h-[520px] w-full object-cover"
-/>
+          <Image
+            src={works.image}
+            alt={works.name || "Workout"}
+            width={600}
+            height={700}
+            className="h-[520px] w-full object-cover"
+          />
         </div>
 
         {/* Workout Information */}
@@ -142,9 +144,8 @@ const WorkDetailsPage = async ({ params }) => {
 
           {/* Action Buttons */}
           <div className="mt-7 flex flex-wrap gap-3">
-            <Addbtn works={works}></Addbtn>
-
-           <Savebtn works={works}></Savebtn>
+            <Addbtn works={works} />
+            <Savebtn works={works} />
           </div>
         </div>
       </div>
