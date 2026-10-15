@@ -1,26 +1,33 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Workoutscard from "@/app/components/Shaerd/Workoutscard";
 
-const getWorkouts = async () => {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || "";
-    const res = await fetch(`${baseUrl}/workouts.json`, {
-      cache: "no-store", 
-    });
+const Home = () => {
+  const [workoutData, setWorkoutData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch workouts");
-    }
+  useEffect(() => {
+    const getWorkouts = async () => {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_SERVER_BASE_URL || "";
+        const res = await fetch(`${baseUrl}/workouts.json`);
 
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching workouts:", error);
-    return [];
-  }
-};
+        if (!res.ok) {
+          throw new Error("Failed to fetch workouts");
+        }
 
-const Home = async () => {
-  const workoutData = await getWorkouts();
+        const data = await res.json();
+        setWorkoutData(data);
+      } catch (error) {
+        console.error("Error fetching workouts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getWorkouts();
+  }, []);
 
   return (
     <section className="container mx-auto px-4 py-16 text-white">
@@ -39,20 +46,24 @@ const Home = async () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.isArray(workoutData) && workoutData.length > 0 ? (
-          workoutData.map((workout, ind) => (
-            <Workoutscard
-              key={workout?.id || ind}
-              work={workout}
-            />
-          ))
-        ) : (
-          <p className="col-span-full text-center text-gray-400">
-            No workouts available.
-          </p>
-        )}
-      </div>
+      {loading ? (
+        <p className="text-center text-gray-400">Loading workouts...</p>
+      ) : (
+        <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.isArray(workoutData) && workoutData.length > 0 ? (
+            workoutData.map((workout, ind) => (
+              <Workoutscard
+                key={workout?.id || ind}
+                work={workout}
+              />
+            ))
+          ) : (
+            <p className="col-span-full text-center text-gray-400">
+              No workouts available.
+            </p>
+          )}
+        </div>
+      )}
     </section>
   );
 };
