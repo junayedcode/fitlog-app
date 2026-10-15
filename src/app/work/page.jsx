@@ -1,16 +1,12 @@
 import React from "react";
 import Workoutscard from "@/app/components/Shaerd/Workoutscard";
-export const instant = false;
-import { connection } from "next/server";
 
 const getWorkouts = async () => {
-  await connection();
-
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/workouts.json`,
       {
-        cache: "no-store",
+        cache: "force-cache",
       }
     );
 
@@ -25,39 +21,41 @@ const getWorkouts = async () => {
   }
 };
 
-const Home = async () => {
+const WorkPage = async () => {
   const workoutData = await getWorkouts();
 
   return (
-    <section className="container mx-auto px-4 py-16 text-white">
-      {/* Heading */}
+    <main className="container mx-auto px-4 py-16 text-white">
       <div className="mb-12 text-center">
         <span className="rounded-full bg-[#b9ff00]/10 px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#b9ff00]">
-          Workout Collection
+          FitLog Library
         </span>
 
-        <h1 className="mt-4 text-4xl font-bold">Explore Our Workouts</h1>
+        <h1 className="mt-4 text-4xl font-bold">
+          All Workouts
+        </h1>
 
         <p className="mx-auto mt-3 max-w-2xl text-gray-400">
-          Discover amazing workouts from different categories and achieve your
-          fitness goals today.
+          Explore workouts and find the right exercises for your fitness goals.
         </p>
       </div>
 
-      {/* Workouts Grid */}
       <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
         {Array.isArray(workoutData) && workoutData.length > 0 ? (
-  workoutData.map((workout, ind) => ( 
-    <Workoutscard key={workout?.id || ind} work={workout} />
-  ))
-) : (
-  <p className="col-span-full text-center text-gray-400">
-    No workouts available.
-  </p>
-)}
+          workoutData.map((workout, ind) => (
+            <Workoutscard
+              key={workout?.id || ind}
+              work={workout}
+            />
+          ))
+        ) : (
+          <p className="col-span-full text-center text-gray-400">
+            No workouts available.
+          </p>
+        )}
       </div>
-    </section>
+    </main>
   );
 };
 
-export default Home;
+export default WorkPage;
