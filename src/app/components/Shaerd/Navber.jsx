@@ -2,13 +2,13 @@
 "use client";
 
 import Image from "next/image";
-import React, { useContext } from "react";
+import React, { useContext, Suspense } from "react";
 import Logo from "../../assets/logo.png";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PlanContext } from "../../context/PlanContext";
 
-const Navber = () => {
+function NavberContent() {
   const { plans, loaded } = useContext(PlanContext);
   const pathname = usePathname();
 
@@ -20,22 +20,13 @@ const Navber = () => {
   return (
     <header className="border-b border-[#1c1f24] bg-[#0b0c0f] px-5 text-white md:px-[70px]">
       <div className="navbar min-h-[70px] p-0">
-        {/* Logo */}
         <div className="navbar-start">
           <Link href="/" className="flex items-center gap-2">
-            <Image
-              src={Logo}
-              alt="FITLOG logo"
-              width={38}
-              height={38}
-            />
-            <span className="text-lg font-bold tracking-wide">
-              FITLOG
-            </span>
+            <Image src={Logo} alt="FITLOG logo" width={38} height={38} />
+            <span className="text-lg font-bold tracking-wide">FITLOG</span>
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
         <nav className="navbar-center hidden lg:flex">
           <div className="flex items-center gap-1 rounded-full border border-[#1c1f24] bg-[#101115] p-1">
             {navLinks.map((link) => {
@@ -58,7 +49,6 @@ const Navber = () => {
           </div>
         </nav>
 
-        {/* Plan and Saved Counters */}
         <div className="navbar-end">
           <div className="flex items-center gap-4 sm:gap-6">
             <Link
@@ -84,7 +74,6 @@ const Navber = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
       <nav className="flex justify-center pb-3 lg:hidden">
         <div className="flex items-center gap-1 rounded-full border border-[#1c1f24] bg-[#101115] p-1">
           {navLinks.map((link) => {
@@ -108,6 +97,16 @@ const Navber = () => {
       </nav>
     </header>
   );
-};
+}
 
-export default Navber;
+export default function Navber() {
+  return (
+    <Suspense
+      fallback={
+        <header className="min-h-[70px] border-b border-[#1c1f24] bg-[#0b0c0f]" />
+      }
+    >
+      <NavberContent />
+    </Suspense>
+  );
+}

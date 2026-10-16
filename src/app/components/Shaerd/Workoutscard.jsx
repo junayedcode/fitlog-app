@@ -1,14 +1,17 @@
+
 import Image from "next/image";
 import Link from "next/link";
 
 const Workoutscard = ({ work }) => {
-
-  const workoutId = work?.id || work?._id;
+  const workoutId = work?.id ?? work?._id;
+  console.log("Workout:", work?.name, "ID:", workoutId);
 
   return (
-    <Link href={workoutId ? `/work/${workoutId}` : "#"} className="block">
+    <Link
+      href={workoutId != null ? `/work/${workoutId}` : "#"}
+      className="block"
+    >
       <div className="group overflow-hidden rounded-xl border border-[#252830] bg-[#15171c] transition duration-300 hover:-translate-y-1 hover:border-[#b9ff00]">
-        
         {work?.image && (
           <Image
             src={work.image}
@@ -25,7 +28,9 @@ const Workoutscard = ({ work }) => {
           </h2>
 
           <p className="mt-2 text-xs text-gray-400">
-            {work?.equipment}
+            {Array.isArray(work?.equipment)
+              ? work.equipment.join(", ")
+              : work?.equipment}
           </p>
 
           <p className="mt-3 line-clamp-2 text-sm text-gray-300">
